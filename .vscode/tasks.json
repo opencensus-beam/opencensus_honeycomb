@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "group": "test",
+      "label": "test",
+      "type": "shell",
+      "command": "mix",
+      "args": [
+        "test",
+        "--color",
+        "--trace"
+      ],
+      "options": {
+        "cwd": "${workspaceRoot}",
+        "requireFiles": [
+          "test/**/test_helper.exs",
+          "test/**/*_test.exs"
+        ],
+      },
+      "problemMatcher": "$mixTestFailure"
+    }
+  ]
+}
