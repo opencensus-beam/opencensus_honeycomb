@@ -8,7 +8,6 @@ Posts [OpenCensus] spans to [Honeycomb].
 ## Installation
 
 * Take the dependency
-* Make sure it's supervised
 * Configure it
 * Check its all working
 
