@@ -10,7 +10,7 @@ defmodule Opencensus.Honeycomb.MixProject do
       description: @description,
       dialyzer: dialyzer(),
       docs: docs(),
-      elixir: "~> 1.8",
+      elixir: "~> 1.5",
       package: package(),
       preferred_cli_env: [
         coveralls: :test,
@@ -23,7 +23,7 @@ defmodule Opencensus.Honeycomb.MixProject do
       ],
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
-      version: "0.1.1"
+      version: "0.1.2"
     ]
   end
 

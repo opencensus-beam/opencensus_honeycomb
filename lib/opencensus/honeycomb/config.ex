@@ -85,7 +85,8 @@ defmodule Opencensus.Honeycomb.Config do
   """
   @spec put(map() | t()) :: t()
   def put(config) when is_map(config) do
-    struct!(__MODULE__, Map.to_list(config)) |> Map.to_list() |> into()
+    config = struct!(__MODULE__, Map.to_list(config))
+    config |> Map.to_list() |> into()
   end
 
   @doc """

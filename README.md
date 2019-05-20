@@ -1,5 +1,8 @@
 # Opencensus.Honeycomb
 
+[![CircleCI](https://circleci.com/gh/opencensus-beam/opencensus_honeycomb.svg?style=svg)](https://circleci.com/gh/opencensus-beam/opencensus_honeycomb)
+[![Hex version badge](https://img.shields.io/hexpm/v/opencensus_honeycomb.svg)](https://hex.pm/packages/opencensus_honeycomb)
+
 Posts [OpenCensus] spans to [Honeycomb].
 
 [OpenCensus]: https://opencensus.io
