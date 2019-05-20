@@ -81,26 +81,21 @@ defmodule Opencensus.Honeycomb.Event do
   require Record
 
   defimpl Jason.Encoder, for: __MODULE__ do
-    @spec encode(%{data: map(), time: any()}, Jason.Encode.opts()) ::
-            binary()
-            | maybe_improper_list(
-                binary() | maybe_improper_list(any(), binary() | []) | byte(),
-                binary() | []
-              )
-    def encode(%{time: time, data: data}, opts) do
-      data = data |> Cleaner.clean()
-      %{time: time, data: data} |> Jason.Encode.map(opts)
+    def encode(%{} = event, opts) do
+      %{time: event.time, data: event.data |> Cleaner.clean(), samplerate: event.samplerate || 1}
+      |> Jason.Encode.map(opts)
     end
   end
 
   @enforce_keys [:time, :data]
-  defstruct [:time, :data]
+  defstruct [:time, :data, :samplerate]
 
   @typedoc """
   Honeycomb event suitable for POSTing to their batch API.
 
   * `time`: ms since epoch; [MUST] be in ISO 8601 format, e.g. `"2019-05-17T09:55:12.622658Z"`
   * `data`: a map of the data to send
+  * `samplerate`: a sample rate that has ALREADY BEEN APPLIED
 
   See [attribute limitations](#module-opencensus-honeycomb) for important detail on span attribute
   names and values.
@@ -110,7 +105,8 @@ defmodule Opencensus.Honeycomb.Event do
   """
   @type t :: %__MODULE__{
           time: String.t(),
-          data: map()
+          data: map(),
+          samplerate: pos_integer() | nil
         }
 
   @doc """
@@ -174,7 +170,15 @@ defmodule Opencensus.Honeycomb.Event do
       |> DateTime.from_unix!(:microsecond)
       |> DateTime.to_iso8601()
 
-    %__MODULE__{time: time, data: data}
+    %__MODULE__{time: time, data: data, samplerate: nil}
+  end
+
+  @doc """
+  Return an event with its `samplerate` set.
+  """
+  @spec with_samplerate(t(), integer()) :: t()
+  def with_samplerate(event, samplerate) when is_integer(samplerate) do
+    struct!(event, samplerate: samplerate)
   end
 
   defp wts_us_since_epoch({monotonic_time, time_offset}) do

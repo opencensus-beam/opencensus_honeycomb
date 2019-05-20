@@ -8,6 +8,7 @@ defmodule Opencensus.Honeycomb.Reporter do
 
   alias Opencensus.Honeycomb.Config
   alias Opencensus.Honeycomb.Event
+  alias Opencensus.Honeycomb.Sampler
   alias Opencensus.Honeycomb.Sender
 
   @behaviour :oc_reporter
@@ -26,6 +27,7 @@ defmodule Opencensus.Honeycomb.Reporter do
 
     spans
     |> Enum.map(translate)
+    |> Sampler.sample(config.samplers)
     |> Enum.chunk_every(config.batch_size)
     |> Enum.each(&Sender.send_batch/1)
 

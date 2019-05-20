@@ -23,6 +23,7 @@ defmodule Opencensus.Honeycomb.Config do
 
   @default_api_endpoint "https://api.honeycomb.io"
   @default_dataset "opencensus"
+  @default_samplers []
   @default_service_name "-"
   @default_write_key nil
   @default_batch_size 100
@@ -31,9 +32,13 @@ defmodule Opencensus.Honeycomb.Config do
     :api_endpoint,
     :batch_size,
     :dataset,
+    :samplers,
     :service_name,
     :write_key
   ]
+
+  @typedoc "An `Opencensus.Honeycomb.Sampler` and its options."
+  @type sampler :: module :: atom() | {module :: atom} | {module :: atom(), options :: keyword()}
 
   @typedoc """
   Our configuration struct.
@@ -41,6 +46,7 @@ defmodule Opencensus.Honeycomb.Config do
   * `api_endpoint`: the API endpoint (default:`#{inspect(@default_api_endpoint)})`
   * `batch_size`: the write key (default:`#{inspect(@default_batch_size)})`
   * `dataset`: the dataset (default:`#{inspect(@default_dataset)})`
+  * `samplers`: the samplers (default:`#{inspect(@default_samplers)}`
   * `service_name`: the service name (default:`#{inspect(@default_service_name)}`
   * `write_key`: the write key (default:`#{inspect(@default_write_key)})`
 
@@ -50,6 +56,7 @@ defmodule Opencensus.Honeycomb.Config do
           api_endpoint: String.t() | nil,
           batch_size: integer() | nil,
           dataset: String.t() | nil,
+          samplers: list(sampler()) | nil,
           service_name: String.t() | nil,
           write_key: String.t() | nil
         }
@@ -112,6 +119,7 @@ defmodule Opencensus.Honeycomb.Config do
       api_endpoint: @default_api_endpoint,
       batch_size: @default_batch_size,
       dataset: @default_dataset,
+      samplers: @default_samplers,
       service_name: @default_service_name,
       write_key: @default_write_key
     }

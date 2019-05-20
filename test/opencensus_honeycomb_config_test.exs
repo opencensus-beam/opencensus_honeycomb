@@ -2,6 +2,10 @@ defmodule Opencensus.Honeycomb.ConfigTest do
   use ExUnit.Case
   alias Opencensus.Honeycomb.Config
 
+  defmodule Sampler do
+    # Our sampler
+  end
+
   setup do
     config = get_app_config()
 
@@ -18,6 +22,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: 100,
              write_key: nil,
              dataset: "opencensus",
+             samplers: [],
              service_name: "-"
            }
   end
@@ -28,6 +33,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
       batch_size: 23,
       write_key: "custom_write_key",
       dataset: "custom_dataset",
+      samplers: [{Sampler, []}],
       service_name: "custom_service_name"
     )
 
@@ -36,6 +42,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: 23,
              write_key: "custom_write_key",
              dataset: "custom_dataset",
+             samplers: [{Sampler, []}],
              service_name: "custom_service_name"
            }
   end
@@ -52,6 +59,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: 100,
              write_key: "0000000000000000",
              dataset: "custom_dataset",
+             samplers: [],
              service_name: "custom_service_name"
            }
   end
@@ -64,16 +72,17 @@ defmodule Opencensus.Honeycomb.ConfigTest do
       batch_size: 23,
       write_key: "custom_write_key",
       dataset: "custom_dataset",
+      samplers: [{Sampler, []}],
       service_name: "custom_service_name"
     }
 
-    assert is_map(config)
     Config.put(config)
 
     assert get_app_config() == [
              api_endpoint: "https://api-custom.example.com",
              batch_size: 23,
              dataset: "custom_dataset",
+             samplers: [{Sampler, []}],
              service_name: "custom_service_name",
              write_key: "custom_write_key"
            ]
@@ -94,6 +103,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              api_endpoint: nil,
              batch_size: nil,
              dataset: nil,
+             samplers: nil,
              service_name: nil,
              write_key: nil
            ]
@@ -109,6 +119,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              api_endpoint: nil,
              write_key: "custom_write_key",
              dataset: nil,
+             samplers: nil,
              service_name: nil
            }
 
@@ -123,6 +134,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: 100,
              write_key: "custom_write_key",
              dataset: "opencensus",
+             samplers: [],
              service_name: "-"
            }
   end
