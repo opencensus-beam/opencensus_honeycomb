@@ -59,10 +59,9 @@ defmodule Opencensus.Honeycomb.Config do
   """
   @spec effective() :: t()
   def effective() do
-    get()
-    |> Map.to_list()
-    |> Enum.filter(&pair_value_not_nil?/1)
-    |> update(defaults())
+    fields = get() |> Map.to_list() |> Enum.filter(fn {_, v} -> not is_nil(v) end)
+
+    struct!(defaults(), fields)
   end
 
   @doc """
@@ -70,7 +69,8 @@ defmodule Opencensus.Honeycomb.Config do
   """
   @spec get() :: t()
   def get() do
-    @app |> Application.get_all_env() |> update()
+    fields = @app |> Application.get_all_env() |> sane()
+    struct!(__MODULE__, fields)
   end
 
   @doc """
@@ -85,15 +85,7 @@ defmodule Opencensus.Honeycomb.Config do
   """
   @spec put(map() | t()) :: t()
   def put(config) when is_map(config) do
-    complete =
-      config
-      |> Map.to_list()
-      |> update()
-
-    complete
-    |> Map.to_list()
-    |> Enum.filter(&pair_key_not_struct?/1)
-    |> into()
+    struct!(__MODULE__, Map.to_list(config)) |> Map.to_list() |> into()
   end
 
   @doc """
@@ -108,18 +100,11 @@ defmodule Opencensus.Honeycomb.Config do
   """
   @spec into(keyword()) :: t()
   def into(fields) do
-    # Pipe the fields into a struct to see if they're valid
-    fields |> update()
-
-    # Put each field into our application config
-    fields |> Enum.each(fn {k, v} -> Application.put_env(@app, k, v) end)
-
-    # Return the application config
+    fields |> lint!() |> Enum.each(&put_env/1)
     get()
   end
 
-  defp pair_key_not_struct?({k, _v}), do: k != :__struct__
-  defp pair_value_not_nil?({_k, v}), do: not is_nil(v)
+  defp put_env({k, v}), do: Application.put_env(@app, k, v)
 
   defp defaults() do
     %__MODULE__{
@@ -131,5 +116,13 @@ defmodule Opencensus.Honeycomb.Config do
     }
   end
 
-  defp update(fields, target \\ __MODULE__), do: Kernel.struct!(target, fields)
+  defp lint!(fields) when is_list(fields) do
+    fields = sane(fields)
+    struct!(__MODULE__, fields)
+    fields
+  end
+
+  defp sane(fields) when is_list(fields) do
+    Enum.filter(fields, fn {k, _} -> k != :__struct__ end)
+  end
 end

@@ -19,7 +19,7 @@ defmodule Opencensus.Honeycomb.Cleaner do
   defp clean_pair(key_value_pair)
 
   # If the key is an atom, convert it to a string:
-  defp clean_pair({k, v}) when is_atom(k), do: {k |> Atom.to_string(), v} |> clean_pair()
+  defp clean_pair({k, v}) when is_atom(k), do: {Atom.to_string(k), v} |> clean_pair()
 
   # If the key isn't a string, drop the pair.
   defp clean_pair({k, _}) when not is_binary(k), do: []
@@ -36,7 +36,7 @@ defmodule Opencensus.Honeycomb.Cleaner do
        do: [{k, v}]
 
   # If the value is an atom, convert it to a string:
-  defp clean_pair({k, v}) when is_atom(v), do: [{k, v |> Atom.to_string()}]
+  defp clean_pair({k, v}) when is_atom(v), do: [{k, Atom.to_string(v)}]
 
   # Flatten maps:
   defp clean_pair({k, map}) when is_map(map) do

@@ -49,7 +49,7 @@ defmodule Opencensus.Honeycomb.Sender do
 
     try do
       config = Config.effective()
-      payload = events |> Jason.encode!()
+      payload = Jason.encode!(events)
       url = "#{config.api_endpoint}/1/batch/#{config.dataset}"
 
       headers = [
@@ -58,11 +58,11 @@ defmodule Opencensus.Honeycomb.Sender do
         {"User-Agent", "opencensus_honeycomb/0.0.0"}
       ]
 
-      if config |> has_set_write_key?(), do: send_it(url, headers, payload)
+      if has_set_write_key?(config), do: send_it(url, headers, payload)
 
       :telemetry.execute(
         @event_stop_success,
-        %{count: count, ms: begin |> ms_since()},
+        %{count: count, ms: ms_since(begin)},
         %{events: events, payload: payload}
       )
 
@@ -71,7 +71,7 @@ defmodule Opencensus.Honeycomb.Sender do
       e ->
         :telemetry.execute(
           @event_stop_failure,
-          %{count: count, ms: begin |> ms_since()},
+          %{count: count, ms: ms_since(begin)},
           %{events: events, exception: e}
         )
 

@@ -79,6 +79,26 @@ defmodule Opencensus.Honeycomb.ConfigTest do
            ]
   end
 
+  test "put/1 partial" do
+    put_app_config(
+      api_endpoint: "https://api.honeycomb.io",
+      batch_size: 100,
+      write_key: "custom_write_key",
+      dataset: "opencensus",
+      service_name: "-"
+    )
+
+    Config.put(%{})
+
+    assert get_app_config() == [
+             api_endpoint: nil,
+             batch_size: nil,
+             dataset: nil,
+             service_name: nil,
+             write_key: nil
+           ]
+  end
+
   test "into/1 update" do
     delete_app_config()
 
@@ -105,6 +125,12 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              dataset: "opencensus",
              service_name: "-"
            }
+  end
+
+  test "into/1 sneaky __struct__" do
+    delete_app_config()
+    Config.into(__struct__: :A)
+    assert get_app_config() == []
   end
 
   test "into/1 removal" do
