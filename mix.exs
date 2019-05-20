@@ -37,7 +37,7 @@ defmodule Opencensus.Honeycomb.MixProject do
     [
       licenses: ["Apache 2.0"],
       links: %{
-        "GitHub" => "https://github.com/amplifiedai/opencensus_honeycomb",
+        "GitHub" => "https://github.com/opencensus-beam/opencensus_honeycomb",
         "OpenCensus" => "https://opencensus.io",
         "OpenCensus Erlang" => "https://github.com/census-instrumentation/opencensus-erlang",
         "OpenCensus BEAM" => "https://github.com/opencensus-beam"
