@@ -87,6 +87,8 @@ defmodule Opencensus.Honeycomb.Sender do
          {:ok, replies} <- Jason.decode(body),
          {:ok} <- check_replies(replies) do
       nil
+    else
+      term -> raise WithClauseError, term: term
     end
   end
 
