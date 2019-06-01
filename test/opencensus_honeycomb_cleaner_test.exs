@@ -8,16 +8,21 @@ defmodule Opencensus.Honeycomb.CleanerTest do
   end
 
   describe "clean/1" do
-    test "booleans" do
-      assert %{bool: true} |> Cleaner.clean() == %{"bool" => true}
+    test "map to booleans" do
+      assert Cleaner.clean(%{bool: true}) == %{"bool" => true}
     end
 
-    test "integers" do
-      assert %{int: 1} |> Cleaner.clean() == %{"int" => 1}
+    test "map to integers" do
+      assert Cleaner.clean(%{int: 1}) == %{"int" => 1}
     end
 
-    test "floats" do
-      assert %{float: 1.23} |> Cleaner.clean() == %{"float" => 1.23}
+    test "map to floats" do
+      assert Cleaner.clean(%{float: 1.23}) == %{"float" => 1.23}
+    end
+
+    test "not a map" do
+      assert Cleaner.clean(nil) == %{}
+      assert Cleaner.clean([]) == %{}
     end
   end
 
