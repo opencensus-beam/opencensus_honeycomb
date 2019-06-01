@@ -21,11 +21,7 @@ defmodule Opencensus.Honeycomb.Sampler.Fixed do
     options = struct!(__MODULE__, [all: false] |> Keyword.merge(options))
 
     if event.samplerate == nil or options.all do
-      # return a positive integer to set the sample rate
       options.rate
-    else
-      # return the event to leave it unmodified
-      event
     end
   end
 end
