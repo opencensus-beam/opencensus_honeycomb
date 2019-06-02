@@ -29,7 +29,19 @@ defmodule Opencensus.Honeycomb.MixProject do
 
   def application() do
     [
-      extra_applications: [:logger]
+      applications: [
+        # We name the applications we need to be started here, so we don't have to specify
+        # runtime: false on our dev and test dependencies, so we don't have to start them
+        # manually during our tests, because I never quite figured out how to do that.
+        # PR welcome!
+        :hackney,
+        :jason,
+        :opencensus
+      ],
+      extra_applications: [
+        # As above, but they're not in :deps because they're part of OTP or Elixir.
+        :logger
+      ]
     ]
   end
 
@@ -47,16 +59,20 @@ defmodule Opencensus.Honeycomb.MixProject do
 
   defp deps() do
     [
-      {:credo, "~> 0.10.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.0.0", only: [:dev, :docs], runtime: false},
-      {:inch_ex, "~> 2.0.0", only: :docs, runtime: false},
-      {:excoveralls, "~> 0.10.6", only: [:dev, :test], runtime: false},
+      {:credo, "~> 0.10.0", only: [:dev, :test]},
+      {:dialyxir, "~> 1.0.0-rc.6", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: [:dev, :docs]},
+      {:excoveralls, "~> 0.10.6", only: [:dev, :test]},
       {:hackney, "~> 1.15"},
+      {:inch_ex, "~> 2.0.0", only: :docs},
       {:jason, "~> 1.1"},
-      {:licensir, "~> 0.4.0", only: :dev, runtime: false},
-      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
+      {:licensir, "~> 0.4.0", only: :dev},
+      {:mix_test_watch, "~> 0.8", only: :dev},
       {:opencensus, "~> 0.9.2"},
+      {:opencensus_plug, "~> 0.3.0", only: [:test, :docs]},
+      {:phoenix, "~> 1.4", only: [:test, :docs]},
+      {:plug, "~> 1.8", only: [:test, :docs]},
+      {:poison, "~> 4.0", only: :test},
       {:telemetry, "~> 0.4"}
     ]
   end
