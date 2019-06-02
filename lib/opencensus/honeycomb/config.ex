@@ -64,20 +64,39 @@ defmodule Opencensus.Honeycomb.Config do
   @doc """
   Get the effective configuration, using default values where necessary.
   """
-  @spec effective() :: t()
+  @spec effective() :: t() | no_return
   def effective() do
     fields = get() |> Map.to_list() |> Enum.filter(fn {_, v} -> not is_nil(v) end)
 
     struct!(defaults(), fields)
   end
 
+  defmodule BadConfigError do
+    @moduledoc false
+    defexception [:key]
+
+    @impl true
+    def exception(%KeyError{key: key}) do
+      %BadConfigError{key: key}
+    end
+
+    @impl true
+    def message(err) do
+      "Bad config key: #{err.key}"
+    end
+  end
+
   @doc """
   Get the application configuration _without_ using default values.
   """
-  @spec get() :: t()
+  @spec get() :: t() | no_return
   def get() do
     fields = @app |> Application.get_all_env() |> sane()
+
     struct!(__MODULE__, fields)
+  rescue
+    e in KeyError ->
+      raise BadConfigError, e
   end
 
   @doc """
