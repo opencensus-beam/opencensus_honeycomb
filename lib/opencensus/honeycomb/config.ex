@@ -23,6 +23,7 @@ defmodule Opencensus.Honeycomb.Config do
 
   @default_api_endpoint "https://api.honeycomb.io"
   @default_dataset "opencensus"
+  @default_decorator nil
   @default_service_name "-"
   @default_write_key nil
   @default_batch_size 100
@@ -31,9 +32,15 @@ defmodule Opencensus.Honeycomb.Config do
     :api_endpoint,
     :batch_size,
     :dataset,
+    :decorator,
     :service_name,
     :write_key
   ]
+
+  @typedoc """
+  The module and keyword arguments for your `Opencensus.Honeycomb.Decorator` implementation.
+  """
+  @type decorator :: {module(), keyword()}
 
   @typedoc """
   Our configuration struct.
@@ -41,6 +48,7 @@ defmodule Opencensus.Honeycomb.Config do
   * `api_endpoint`: the API endpoint (default:`#{inspect(@default_api_endpoint)})`
   * `batch_size`: the write key (default:`#{inspect(@default_batch_size)})`
   * `dataset`: the dataset (default:`#{inspect(@default_dataset)})`
+  * `decorator`: the decorator module and arguments (default:`#{inspect(@default_decorator)})`
   * `service_name`: the service name (default:`#{inspect(@default_service_name)}`
   * `write_key`: the write key (default:`#{inspect(@default_write_key)})`
 
@@ -50,6 +58,7 @@ defmodule Opencensus.Honeycomb.Config do
           api_endpoint: String.t() | nil,
           batch_size: integer() | nil,
           dataset: String.t() | nil,
+          decorator: decorator() | nil,
           service_name: String.t() | nil,
           write_key: String.t() | nil
         }
@@ -112,6 +121,7 @@ defmodule Opencensus.Honeycomb.Config do
       api_endpoint: @default_api_endpoint,
       batch_size: @default_batch_size,
       dataset: @default_dataset,
+      decorator: @default_decorator,
       service_name: @default_service_name,
       write_key: @default_write_key
     }

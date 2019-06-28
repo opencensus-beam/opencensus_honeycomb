@@ -26,9 +26,20 @@ defmodule Opencensus.Honeycomb.Reporter do
 
     spans
     |> Enum.map(translate)
+    |> Enum.map(&decorate(&1, config.decorator))
     |> Enum.chunk_every(config.batch_size)
     |> Enum.each(&Sender.send_batch/1)
 
     :ok
+  end
+
+  @doc false
+  @spec decorate(Event.t(), Config.decorator()) :: Event.t()
+  def decorate(event, decorator)
+  def decorate(event, nil), do: event
+
+  def decorate(event, {module, opts}) do
+    data = apply(module, :decorate, [event.data, opts])
+    struct!(event, data: data)
   end
 end

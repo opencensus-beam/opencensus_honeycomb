@@ -52,6 +52,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: 100,
              write_key: "0000000000000000",
              dataset: "custom_dataset",
+             decorator: nil,
              service_name: "custom_service_name"
            }
   end
@@ -64,6 +65,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
       batch_size: 23,
       write_key: "custom_write_key",
       dataset: "custom_dataset",
+      decorator: {MyApp.Decorator, []},
       service_name: "custom_service_name"
     }
 
@@ -74,6 +76,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              api_endpoint: "https://api-custom.example.com",
              batch_size: 23,
              dataset: "custom_dataset",
+             decorator: {MyApp.Decorator, []},
              service_name: "custom_service_name",
              write_key: "custom_write_key"
            ]
@@ -94,6 +97,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              api_endpoint: nil,
              batch_size: nil,
              dataset: nil,
+             decorator: nil,
              service_name: nil,
              write_key: nil
            ]

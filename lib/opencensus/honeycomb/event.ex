@@ -97,20 +97,26 @@ defmodule Opencensus.Honeycomb.Event do
   defstruct [:time, :data]
 
   @typedoc """
-  Honeycomb event suitable for POSTing to their batch API.
-
-  * `time`: ms since epoch; [MUST] be in ISO 8601 format, e.g. `"2019-05-17T09:55:12.622658Z"`
-  * `data`: a map of the data to send
+  Span attributes after flattening.
 
   See [attribute limitations](#module-opencensus-honeycomb) for important detail on span attribute
   names and values.
 
-  [MUST]: https://tools.ietf.org/html/rfc2119#section-1
   [attrlimits]: #module-opencensus-honeycomb
+  """
+  @type event_data :: map()
+
+  @typedoc """
+  Honeycomb event suitable for POSTing to their batch API.
+
+  * `time`: ms since epoch; [MUST] be in ISO 8601 format, e.g. `"2019-05-17T09:55:12.622658Z"`
+  * `data`: `t:event_data/0` after flattening.
+
+  [MUST]: https://tools.ietf.org/html/rfc2119#section-1
   """
   @type t :: %__MODULE__{
           time: String.t(),
-          data: map()
+          data: event_data()
         }
 
   @doc """
