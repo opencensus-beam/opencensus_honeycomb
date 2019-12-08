@@ -82,7 +82,7 @@ defmodule Opencensus.Honeycomb.Sender do
   defp send_it(url, headers, payload) do
     with {:ok, status, _headers, client_ref} <-
            :hackney.request(:post, url, headers, payload, []),
-         {:ok} <- check_status(status),
+         {:ok} <- check_status(status, client_ref),
          {:ok, body} <- :hackney.body(client_ref),
          {:ok, replies} <- Jason.decode(body),
          {:ok} <- check_replies(replies) do
@@ -100,8 +100,13 @@ defmodule Opencensus.Honeycomb.Sender do
     end
   end
 
-  defp check_status(status) when is_integer(status) do
-    if status == 200, do: {:ok}, else: {:error, :bad_status, status}
+  defp check_status(status, client_ref) when is_integer(status) do
+    if status == 200 do
+      {:ok}
+    else
+      :hackney.close(client_ref)
+      {:error, :bad_status, status}
+    end
   end
 
   defp check_replies(replies) when is_list(replies) do
