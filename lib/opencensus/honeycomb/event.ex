@@ -126,7 +126,7 @@ defmodule Opencensus.Honeycomb.Event do
   """
   @spec now() :: String.t()
   def now() do
-    DateTime.now("Etc/UTC") |> elem(1) |> DateTime.to_iso8601()
+    DateTime.utc_now() |> DateTime.to_iso8601()
   end
 
   # Record for :opencensus.span
