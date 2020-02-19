@@ -158,7 +158,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
            ]
   end
 
-  defp get_app_config() do
+  defp get_app_config do
     :opencensus_honeycomb
     |> Application.get_all_env()
     |> Enum.sort()
@@ -169,7 +169,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
     config |> Enum.each(fn {k, v} -> Application.put_env(:opencensus_honeycomb, k, v) end)
   end
 
-  defp delete_app_config() do
+  defp delete_app_config do
     Application.get_all_env(:opencensus_honeycomb)
     |> Keyword.keys()
     |> Enum.each(&Application.delete_env(:opencensus_honeycomb, &1))

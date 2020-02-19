@@ -36,7 +36,7 @@ defmodule Opencensus.Honeycomb.Sender do
   alias Opencensus.Honeycomb.Event
 
   @doc false
-  def telemetry_events(), do: [@event_stop_failure, @event_start, @event_stop_success]
+  def telemetry_events, do: [@event_stop_failure, @event_start, @event_stop_success]
 
   @doc """
   Send a batch of Honeycomb events to the Honeycomb batch API.

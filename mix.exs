@@ -47,17 +47,17 @@ defmodule Opencensus.Honeycomb.MixProject do
 
   defp deps() do
     [
-      {:credo, "~> 0.10.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.0.0", only: [:dev, :docs], runtime: false},
+      {:credo, "~> 1.2.2", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.7", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.21.3", only: [:dev, :docs], runtime: false},
       {:inch_ex, "~> 2.0.0", only: :docs, runtime: false},
-      {:excoveralls, "~> 0.10.6", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.12.2", only: [:dev, :test], runtime: false},
       {:hackney, "~> 1.15"},
       {:jason, "~> 1.1"},
-      {:licensir, "~> 0.4.0", only: :dev, runtime: false},
-      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
+      {:licensir, "~> 0.6.0", only: :dev, runtime: false},
+      {:mix_test_watch, "~> 1.0.2", only: :dev, runtime: false},
       {:opencensus, "~> 0.9.2"},
-      {:telemetry, "~> 0.4"}
+      {:telemetry, "~> 0.4.0"}
     ]
   end
 

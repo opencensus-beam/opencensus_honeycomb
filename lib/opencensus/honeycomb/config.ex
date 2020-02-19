@@ -67,7 +67,7 @@ defmodule Opencensus.Honeycomb.Config do
   Get the effective configuration, using default values where necessary.
   """
   @spec effective() :: t()
-  def effective() do
+  def effective do
     fields = get() |> Map.to_list() |> Enum.filter(fn {_, v} -> not is_nil(v) end)
 
     struct!(defaults(), fields)
@@ -77,7 +77,7 @@ defmodule Opencensus.Honeycomb.Config do
   Get the application configuration _without_ using default values.
   """
   @spec get() :: t()
-  def get() do
+  def get do
     fields = @app |> Application.get_all_env() |> sane()
     struct!(__MODULE__, fields)
   end
@@ -116,7 +116,7 @@ defmodule Opencensus.Honeycomb.Config do
 
   defp put_env({k, v}), do: Application.put_env(@app, k, v)
 
-  defp defaults() do
+  defp defaults do
     %__MODULE__{
       api_endpoint: @default_api_endpoint,
       batch_size: @default_batch_size,

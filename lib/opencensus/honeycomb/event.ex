@@ -76,12 +76,14 @@ defmodule Opencensus.Honeycomb.Event do
   ```
   """
 
+  alias Jason.Encode
+  alias Jason.Encoder
   alias Opencensus.Honeycomb.Cleaner
 
   require Record
 
-  defimpl Jason.Encoder, for: __MODULE__ do
-    @spec encode(%{data: map(), time: any()}, Jason.Encode.opts()) ::
+  defimpl Encoder, for: __MODULE__ do
+    @spec encode(%{data: map(), time: any()}, Encode.opts()) ::
             binary()
             | maybe_improper_list(
                 binary() | maybe_improper_list(any(), binary() | []) | byte(),
@@ -89,7 +91,7 @@ defmodule Opencensus.Honeycomb.Event do
               )
     def encode(%{time: time, data: data}, opts) do
       data = data |> Cleaner.clean()
-      %{time: time, data: data} |> Jason.Encode.map(opts)
+      %{time: time, data: data} |> Encode.map(opts)
     end
   end
 
@@ -125,7 +127,7 @@ defmodule Opencensus.Honeycomb.Event do
   Useful when creating events manually.
   """
   @spec now() :: String.t()
-  def now() do
+  def now do
     DateTime.utc_now() |> DateTime.to_iso8601()
   end
 
@@ -167,7 +169,6 @@ defmodule Opencensus.Honeycomb.Event do
         name: record |> span(:name),
         # Our extensions with matching style:
         "trace.span_kind": record |> span(:kind)
-        # TODO "trace.span_status": record |> span(:status)
       })
       |> Map.to_list()
       |> Enum.filter(&is_value_safe?/1)
