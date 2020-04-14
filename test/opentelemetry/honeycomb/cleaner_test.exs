@@ -1,7 +1,7 @@
-defmodule Opencensus.Honeycomb.CleanerTest do
+defmodule OpenTelemetry.Honeycomb.CleanerTest do
   use ExUnit.Case
-  alias Opencensus.Honeycomb.Cleaner
-  doctest Opencensus.Honeycomb.Cleaner
+  alias OpenTelemetry.Honeycomb.Cleaner
+  doctest OpenTelemetry.Honeycomb.Cleaner
 
   defmodule UnexpectedSpanishInquisition do
     defstruct []

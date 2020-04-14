@@ -1,11 +1,11 @@
-# Opencensus.Honeycomb
+# OpenTelemetry.Honeycomb
 
-[![CircleCI](https://circleci.com/gh/opencensus-beam/opencensus_honeycomb.svg?style=svg)](https://circleci.com/gh/opencensus-beam/opencensus_honeycomb)
-[![Hex version badge](https://img.shields.io/hexpm/v/opencensus_honeycomb.svg)](https://hex.pm/packages/opencensus_honeycomb)
+[![CircleCI](https://circleci.com/gh/opentelemetry-beam/opentelemetry_honeycomb.svg?style=svg)](https://circleci.com/gh/opentelemetry-beam/opentelemetry_honeycomb)
+[![Hex version badge](https://img.shields.io/hexpm/v/opentelemetry_honeycomb.svg)](https://hex.pm/packages/opentelemetry_honeycomb)
 
-Posts [OpenCensus] spans to [Honeycomb].
+Posts [OpenTelemetry] spans to [Honeycomb].
 
-[OpenCensus]: https://opencensus.io
+[OpenTelemetry]: https://opentelemetry.io
 [Honeycomb]: https://www.honeycomb.io
 
 ## Installation
@@ -16,26 +16,26 @@ Posts [OpenCensus] spans to [Honeycomb].
 
 ### Dependency
 
-Add `opencensus_honeycomb` to your `deps` in `mix.exs`:
+Add `opentelemetry_honeycomb` to your `deps` in `mix.exs`:
 
 ```elixir
-{:opencensus_honeycomb, "~> 0.1"}
+{:opentelemetry_honeycomb, "~> 0.1"}
 ```
 
 Then, `mix deps.get` and `mix deps.compile` as usual.
 
 ### Configuration
 
-In your `config/config.exs`, configure `:opencensus` and
-`:opencensus_honeycomb`:
+In your `config/config.exs`, configure `:opentelemetry` and
+`:opentelemetry_honeycomb`:
 
 ```eixir
-config :opencensus,
-  reporters: [{Opencensus.Honeycomb.Reporter, []}],
+config :opentelemetry,
+  reporters: [{OpenTelemetry.Honeycomb.Reporter, []}],
   send_interval_ms: 1000
 
-config :opencensus_honeycomb,
-  dataset: "opencensus",
+config :opentelemetry_honeycomb,
+  dataset: "opentelemetry",
   service_name: "your_app",
   write_key: System.get_env("HONEYCOMB_WRITEKEY")
 ```
@@ -44,10 +44,10 @@ config :opencensus_honeycomb,
 
 `iex -S mix`, then:
 
-    iex> Application.get_env(:opencensus, :reporters)
-    [{Opencensus.Honeycomb.Reporter, []}]
+    iex> Application.get_env(:opentelemetry, :reporters)
+    [{OpenTelemetry.Honeycomb.Reporter, []}]
 
-    iex> Application.get_all_env(:opencensus_honeycomb)
+    iex> Application.get_all_env(:opentelemetry_honeycomb)
     [write_key: "...", service_name: "...", dataset: "..."]
 
     iex> :ocp.with_child_span("test")
@@ -63,7 +63,7 @@ config :opencensus_honeycomb,
 If you don't notice any sending, check the registration in case the config
 format changed again. Register manually, then try again:
 
-    iex> :oc_reporter.register(Opencensus.Honeycomb.Reporter, [])
+    iex> :oc_reporter.register(OpenTelemetry.Honeycomb.Reporter, [])
     :ok
 
 Once you've seen some spans, try a stack of ten:
@@ -83,12 +83,12 @@ Once you've seen some spans, try a stack of ten:
 
 ## Telemetry
 
-Opencensus.Honeycomb calls `:telemetry.execute/2` before and after sending.
+OpenTelemetry.Honeycomb calls `:telemetry.execute/2` before and after sending.
 To get an idea without reading the in-code documentation, run the following
 at the `iex -S mix` prompt:
 
 ```elixir
-alias Opencensus.Honeycomb.{Config,Event,Sender}
+alias OpenTelemetry.Honeycomb.{Config,Event,Sender}
 Config.put(%{write_key: nil})
 handle_event = fn n, measure, meta, _ -> IO.inspect({n, measure, meta}) end
 :telemetry.attach_many("test", Sender.telemetry_events(), handle_event, nil)
@@ -98,14 +98,14 @@ handle_event = fn n, measure, meta, _ -> IO.inspect({n, measure, meta}) end
 You should see two events inspected:
 
 ```elixir
-{[:opencensus, :honeycomb, :start], %{count: 1},
+{[:opentelemetry, :honeycomb, :start], %{count: 1},
  %{
    events: [
      # ...
    ]
  }}
 
-{[:opencensus, :honeycomb, :stop, :success], %{count: 1, ms: 5.535},
+{[:opentelemetry, :honeycomb, :stop, :success], %{count: 1, ms: 5.535},
  %{
    events: [
      # ...
@@ -145,3 +145,7 @@ Documentation:
 
 * `mix docs` to generate documentation for this project
 * `mix help` to find out what else you can do with `mix`
+
+## Changes since Opencensus.Honeycomb
+
+* Removed decorator: use resources or extra processors.

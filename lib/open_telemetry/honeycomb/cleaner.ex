@@ -1,4 +1,4 @@
-defmodule Opencensus.Honeycomb.Cleaner do
+defmodule OpenTelemetry.Honeycomb.Cleaner do
   @moduledoc false
 
   @type attribute_key :: String.t()
