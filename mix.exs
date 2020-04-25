@@ -1,16 +1,17 @@
-defmodule Opencensus.Honeycomb.MixProject do
+defmodule OpenTelemetry.Honeycomb.MixProject do
   use Mix.Project
 
-  @description "Integration between OpenCensus and Honeycomb"
+  @description "Integration between OpenTelemetry and Honeycomb"
 
   def project do
     [
-      app: :opencensus_honeycomb,
+      app: :opentelemetry_honeycomb,
       deps: deps(),
       description: @description,
       dialyzer: dialyzer(),
       docs: docs(),
       elixir: "~> 1.5",
+      elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
       preferred_cli_env: [
         coveralls: :test,
@@ -23,40 +24,48 @@ defmodule Opencensus.Honeycomb.MixProject do
       ],
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
-      version: "0.2.2"
+      version: "0.3.0-rc.0"
     ]
   end
 
-  def application() do
+  def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :hackney, :poison]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp package() do
     [
       licenses: ["Apache 2.0"],
       links: %{
-        "GitHub" => "https://github.com/opencensus-beam/opencensus_honeycomb",
-        "OpenCensus" => "https://opencensus.io",
-        "OpenCensus Erlang" => "https://github.com/census-instrumentation/opencensus-erlang",
-        "OpenCensus BEAM" => "https://github.com/opencensus-beam"
+        "GitHub" => "https://github.com/garthk/opentelemetry_honeycomb",
+        "OpenTelemetry" => "https://opentelemetry.io",
+        "OpenTelemetry Erlang API" =>
+          "https://github.com/open-telemetry/opentelemetry-erlang-api",
+        "OpenTelemetry Erlang SDK" => "https://github.com/open-telemetry/opentelemetry-erlang"
       }
     ]
   end
 
   defp deps() do
     [
-      {:credo, "~> 1.2.2", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.7", only: :dev, runtime: false},
+      {:credo, "~> 1.4.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0", only: :dev, runtime: false},
       {:ex_doc, ">= 0.21.3", only: [:dev, :docs], runtime: false},
+      {:excoveralls, "~> 0.12.3", only: [:dev, :test], runtime: false},
       {:inch_ex, "~> 2.0.0", only: :docs, runtime: false},
-      {:excoveralls, "~> 0.12.2", only: [:dev, :test], runtime: false},
-      {:hackney, "~> 1.15"},
-      {:jason, "~> 1.1"},
-      {:licensir, "~> 0.6.0", only: :dev, runtime: false},
+      {:licensir, "~> 0.6.1", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0.2", only: :dev, runtime: false},
-      {:opencensus, "~> 0.9.2"},
+      {:mox, "~> 0.5.1", only: :test, runtime: false},
+      # versions for runtime dependencies deliberately set as low as possible:
+      {:hackney, ">= 1.11.0", optional: true},
+      {:jason, ">= 1.0.0", optional: true},
+      {:opentelemetry, "~> 0.4.0"},
+      {:opentelemetry_api, "~> 0.3.1"},
+      {:poison, ">= 1.5.0", optional: true},
       {:telemetry, "~> 0.4.0"}
     ]
   end
@@ -71,11 +80,9 @@ defmodule Opencensus.Honeycomb.MixProject do
 
   defp docs() do
     [
-      main: "Opencensus.Honeycomb",
+      main: "OpenTelemetry.Honeycomb",
       extras: [],
-      deps: [
-        opencensus: "https://hexdocs.pm/opencensus/"
-      ]
+      nest_modules_by_prefix: [OpenTelemetry.Honeycomb]
     ]
   end
 end
