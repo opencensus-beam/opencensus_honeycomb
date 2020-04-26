@@ -1,4 +1,4 @@
-import Config
+use Mix.Config
 
 # You can also supply opentelemetry resources using environment variables, eg.:
 # OTEL_RESOURCE_LABELS=service.name=name,service.namespace=namespace

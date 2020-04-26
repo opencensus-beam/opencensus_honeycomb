@@ -17,10 +17,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
         coveralls: :test,
         "coveralls.html": :test,
         "coveralls.json": :test,
-        docs: :docs,
-        inch: :docs,
-        "inch.report": :docs,
-        "inchci.add": :docs
+        docs: :dev
       ],
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
@@ -52,11 +49,10 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
 
   defp deps() do
     [
-      {:credo, "~> 1.4.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.4.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0.0", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.21.3", only: [:dev, :docs], runtime: false},
-      {:excoveralls, "~> 0.12.3", only: [:dev, :test], runtime: false},
-      {:inch_ex, "~> 2.0.0", only: :docs, runtime: false},
+      {:ex_doc, ">= 0.21.3", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.12.3", only: :test, runtime: false},
       {:licensir, "~> 0.6.1", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0.2", only: :dev, runtime: false},
       {:mox, "~> 0.5.1", only: :test, runtime: false},
@@ -74,7 +70,9 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
     [
       # 'mix dialyzer --format dialyzer' to get lines you can paste into:
       ignore_warnings: "dialyzer.ignore-warnings",
-      list_unused_filters: true
+      list_unused_filters: true,
+      plt_add_apps: [:mix],
+      plt_add_deps: [:app_tree]
     ]
   end
 
