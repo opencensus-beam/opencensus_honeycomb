@@ -1,5 +1,6 @@
 # OpenTelemetry.Honeycomb
 
+[![Build status badge](https://github.com/garthk/opentelemetry_honeycomb/workflows/Elixir%20CI/badge.svg)](https://github.com/garthk/opentelemetry_honeycomb/actions)
 [![Hex version badge](https://img.shields.io/hexpm/v/opentelemetry_honeycomb.svg)](https://hex.pm/packages/opentelemetry_honeycomb)
 
 <!-- MDOC !-->
