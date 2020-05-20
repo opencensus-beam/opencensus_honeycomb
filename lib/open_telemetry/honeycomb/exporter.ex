@@ -82,7 +82,15 @@ defmodule OpenTelemetry.Honeycomb.Exporter do
   defp export_loaded(spans, resource, config) do
     resource_attributes = :ot_resource.attributes(resource) |> Attributes.sort()
     attribute_map = config[:attribute_map]
-    cook = fn ot_span -> Event.from_ot_span(ot_span, resource_attributes, attribute_map) end
+
+    cook = fn ot_span ->
+      Event.from_ot_span(
+        ot_span,
+        resource_attributes,
+        attribute_map,
+        Keyword.get(config, :samplerate_key)
+      )
+    end
 
     spans
     |> Enum.flat_map(cook)

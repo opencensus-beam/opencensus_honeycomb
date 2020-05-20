@@ -54,6 +54,7 @@ defmodule OpenTelemetry.Honeycomb.Config do
   * `dataset`: the Honeycomb dataset name
   * `http_module`: the HTTP back end module (see `Http`)
   * `http_options`: options to pass to the HTTP back end (see `Http`)
+  * `samplerate_key`: the attribute key smuggling your sample rate to Honeycomb
   * `json_module`: the HTTP back end module (see `Json`)
   * `write_key`: the write key
 
@@ -66,6 +67,7 @@ defmodule OpenTelemetry.Honeycomb.Config do
           | {:attribute_map, AttributeMap.t()}
           | {:dataset, String.t()}
           | {:write_key, String.t() | nil}
+          | {:samplerate_key, String.t() | nil}
           | Http.config_opt()
           | Json.config_opt()
 

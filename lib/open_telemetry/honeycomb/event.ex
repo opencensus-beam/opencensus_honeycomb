@@ -58,9 +58,10 @@ defmodule OpenTelemetry.Honeycomb.Event do
   @spec from_ot_span(
           :opentelemetry.span(),
           resource_attributes :: OpenTelemetry.attributes(),
-          attribute_map :: AttributeMap.t()
+          attribute_map :: AttributeMap.t(),
+          samplerate_key :: nil | String.t()
         ) :: [t()]
-  def from_ot_span(ot_span, resource_attributes, attribute_map) do
+  def from_ot_span(ot_span, resource_attributes, attribute_map, samplerate_key \\ nil) do
     span = Span.from(ot_span)
 
     data =
@@ -77,8 +78,14 @@ defmodule OpenTelemetry.Honeycomb.Event do
       |> DateTime.from_unix!(:microsecond)
       |> DateTime.to_iso8601()
 
-    [%__MODULE__{time: time, data: data}]
+    {samplerate, data} = pop_sample_rate(data, samplerate_key)
+    [%__MODULE__{time: time, data: data, samplerate: samplerate}]
   end
+
+  @spec pop_sample_rate(event_data(), nil | String.t()) :: {pos_integer(), event_data()}
+  defp pop_sample_rate(data, samplerate_key)
+  defp pop_sample_rate(data, nil), do: {1, data}
+  defp pop_sample_rate(data, samplerate_key), do: Map.pop(data, samplerate_key, 1)
 
   # span attribute extractors
   @spec extracted_attributes(Span.t(), AttributeMap.t()) :: OpenTelemetry.attributes()
