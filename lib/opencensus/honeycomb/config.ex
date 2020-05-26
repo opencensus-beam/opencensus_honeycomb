@@ -34,7 +34,8 @@ defmodule Opencensus.Honeycomb.Config do
     :dataset,
     :decorator,
     :service_name,
-    :write_key
+    :write_key,
+    :samplerate_key
   ]
 
   @typedoc """
@@ -60,7 +61,8 @@ defmodule Opencensus.Honeycomb.Config do
           dataset: String.t() | nil,
           decorator: decorator() | nil,
           service_name: String.t() | nil,
-          write_key: String.t() | nil
+          write_key: String.t() | nil,
+          samplerate_key: String.t() | nil
         }
 
   @doc """

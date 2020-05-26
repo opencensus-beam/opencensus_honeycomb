@@ -22,16 +22,25 @@ defmodule Opencensus.Honeycomb.Reporter do
   def report(spans, :ok) do
     config = Config.effective()
     service_name = config.service_name
-    translate = fn span -> Event.from_oc_span(span, service_name) end
+    samplerate_key = config.samplerate_key
+    translate = fn span -> Event.from_oc_span(span, service_name, samplerate_key) end
 
     spans
     |> Enum.map(translate)
+    |> Enum.filter(&survived_sampling?/1)
     |> Enum.map(&decorate(&1, config.decorator))
     |> Enum.chunk_every(config.batch_size)
     |> Enum.each(&Sender.send_batch/1)
 
     :ok
   end
+
+  defp survived_sampling?(%Event{samplerate: 1}), do: true
+
+  defp survived_sampling?(%Event{samplerate: n}) when is_integer(n) and n > 0,
+    do: :rand.uniform(n) == 1
+
+  defp survived_sampling?(_), do: false
 
   @doc false
   @spec decorate(Event.t(), Config.decorator()) :: Event.t()
