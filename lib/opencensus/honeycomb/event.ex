@@ -89,9 +89,9 @@ defmodule Opencensus.Honeycomb.Event do
                 binary() | maybe_improper_list(any(), binary() | []) | byte(),
                 binary() | []
               )
-    def encode(%{time: time, data: data}, opts) do
+    def encode(%{time: time, data: data, samplerate: samplerate}, opts) do
       data = data |> Cleaner.clean()
-      %{time: time, data: data} |> Encode.map(opts)
+      %{time: time, data: data, samplerate: samplerate} |> Encode.map(opts)
     end
   end
 
