@@ -89,14 +89,14 @@ defmodule Opencensus.Honeycomb.Event do
                 binary() | maybe_improper_list(any(), binary() | []) | byte(),
                 binary() | []
               )
-    def encode(%{time: time, data: data}, opts) do
+    def encode(%{time: time, data: data, samplerate: samplerate}, opts) do
       data = data |> Cleaner.clean()
-      %{time: time, data: data} |> Encode.map(opts)
+      %{time: time, data: data, samplerate: samplerate} |> Encode.map(opts)
     end
   end
 
-  @enforce_keys [:time, :data]
-  defstruct [:time, :data]
+  @enforce_keys [:time, :data, :samplerate]
+  defstruct [:time, :data, :samplerate]
 
   @typedoc """
   Span attributes after flattening.
@@ -113,12 +113,14 @@ defmodule Opencensus.Honeycomb.Event do
 
   * `time`: ms since epoch; [MUST] be in ISO 8601 format, e.g. `"2019-05-17T09:55:12.622658Z"`
   * `data`: `t:event_data/0` after flattening.
+  * `samplerate`: Sample rate expressed as 1/N, so 4 means 1/4 events made it to HC.
 
   [MUST]: https://tools.ietf.org/html/rfc2119#section-1
   """
   @type t :: %__MODULE__{
           time: String.t(),
-          data: event_data()
+          data: event_data(),
+          samplerate: pos_integer()
         }
 
   @doc """
@@ -147,8 +149,8 @@ defmodule Opencensus.Honeycomb.Event do
   [HCevents]: https://docs.honeycomb.io/api/events/
   [HCstruct]: https://github.com/honeycombio/opencensus-exporter/blob/master/honeycomb/honeycomb.go#L42
   """
-  @spec from_oc_span(:opencensus.span(), String.t()) :: t()
-  def from_oc_span(record, service_name) do
+  @spec from_oc_span(:opencensus.span(), String.t(), String.t()) :: t()
+  def from_oc_span(record, service_name, samplerate_key) do
     start_time = record |> span(:start_time) |> wts_us_since_epoch()
     end_time = record |> span(:end_time) |> wts_us_since_epoch()
     duration_ms = (end_time - start_time) / 1_000
@@ -174,6 +176,8 @@ defmodule Opencensus.Honeycomb.Event do
       |> Enum.filter(&is_value_safe?/1)
       |> Enum.into(%{})
 
+    {samplerate, data} = pop_samplerate(data, samplerate_key)
+
     time =
       record
       |> span(:start_time)
@@ -181,8 +185,13 @@ defmodule Opencensus.Honeycomb.Event do
       |> DateTime.from_unix!(:microsecond)
       |> DateTime.to_iso8601()
 
-    %__MODULE__{time: time, data: data}
+    %__MODULE__{time: time, data: data, samplerate: samplerate}
   end
+
+  @spec pop_samplerate(event_data(), nil | String.t()) :: {pos_integer(), event_data()}
+  defp pop_samplerate(data, samplerate_key)
+  defp pop_samplerate(data, nil), do: {1, data}
+  defp pop_samplerate(data, samplerate_key), do: Map.pop(data, samplerate_key, 1)
 
   defp wts_us_since_epoch({monotonic_time, time_offset}) do
     div(monotonic_time + time_offset, 1_000)
