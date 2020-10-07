@@ -66,6 +66,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
       write_key: "custom_write_key",
       dataset: "custom_dataset",
       decorator: {MyApp.Decorator, []},
+      samplerate_key: "custom_samplerate_key",
       service_name: "custom_service_name"
     }
 
@@ -77,6 +78,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: 23,
              dataset: "custom_dataset",
              decorator: {MyApp.Decorator, []},
+             samplerate_key: "custom_samplerate_key",
              service_name: "custom_service_name",
              write_key: "custom_write_key"
            ]
@@ -98,6 +100,7 @@ defmodule Opencensus.Honeycomb.ConfigTest do
              batch_size: nil,
              dataset: nil,
              decorator: nil,
+             samplerate_key: nil,
              service_name: nil,
              write_key: nil
            ]

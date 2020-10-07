@@ -15,9 +15,8 @@ defmodule Opencensus.Honeycomb.DecoratorTest do
   test "no decoration" do
     original = %Event{
       time: "2019-06-28T00:40:05.782Z",
-      data: %{
-        "whatever" => 1
-      }
+      data: %{"whatever" => 1},
+      samplerate: 1
     }
 
     assert Reporter.decorate(original, nil) == original
@@ -26,7 +25,8 @@ defmodule Opencensus.Honeycomb.DecoratorTest do
   test "decoration" do
     original = %Event{
       time: "2019-06-28T00:40:05.782Z",
-      data: %{}
+      data: %{},
+      samplerate: 1
     }
 
     extra_data = %{
@@ -35,7 +35,8 @@ defmodule Opencensus.Honeycomb.DecoratorTest do
 
     expected = %Event{
       time: original.time,
-      data: extra_data
+      data: extra_data,
+      samplerate: 1
     }
 
     assert Reporter.decorate(original, {MyDecorator, extra_data: extra_data}) == expected
