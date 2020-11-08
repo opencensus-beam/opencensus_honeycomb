@@ -1,7 +1,7 @@
 use Mix.Config
 
 # You can also supply opentelemetry resources using environment variables, eg.:
-# OTEL_RESOURCE_LABELS=service.name=name,service.namespace=namespace
+# OTEL_RESOURCE_ATTRIBUTES=service.name=name,service.namespace=namespace
 
 config :opentelemetry, :resource,
   service: [
@@ -10,9 +10,9 @@ config :opentelemetry, :resource,
   ]
 
 config :opentelemetry,
-  tracer: :ot_tracer_default,
+  tracer: :otel_tracer_default,
   processors: [
-    ot_batch_processor: %{
+    otel_batch_processor: %{
       exporter:
         {OpenTelemetry.Honeycomb.Exporter,
          http_module: OpenTelemetry.Honeycomb.Http.HackneyBackend,

@@ -4,7 +4,7 @@ defmodule OpenTelemetry.Records.Span do
 
   alias OpenTelemetry.Records.Event
 
-  @fields Record.extract(:span, from_lib: "opentelemetry/include/ot_span.hrl")
+  @fields Record.extract(:span, from_lib: "opentelemetry/include/otel_span.hrl")
   Record.defrecordp(:span, @fields)
   defstruct @fields
 

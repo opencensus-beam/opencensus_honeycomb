@@ -2,7 +2,7 @@ use Mix.Config
 
 config :opentelemetry,
   processors: [
-    ot_batch_processor: %{
+    otel_batch_processor: %{
       scheduled_delay_ms: 1,
       exporter:
         {OpenTelemetry.Honeycomb.Exporter,

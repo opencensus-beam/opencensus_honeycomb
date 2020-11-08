@@ -2,7 +2,7 @@ defmodule OpenTelemetry.Honeycomb.Exporter do
   @moduledoc """
   Exporter implementation.
 
-  `:ot_batch_processor` calls `export/3`, which:
+  `:otel_batch_processor` calls `export/3`, which:
 
   * fetches the attributes of the named resource
   * loads the spans from the named ETS table
@@ -25,8 +25,8 @@ defmodule OpenTelemetry.Honeycomb.Exporter do
   @hc_event_limit 102_400
   @hc_batch_limit 5_242_880
 
-  @behaviour :ot_exporter
-  @impl :ot_exporter
+  @behaviour :otel_exporter
+  @impl :otel_exporter
   @spec init(config :: Config.t()) :: {:ok, Config.t()} | :ignore
   def init(config) do
     config = Keyword.merge(Config.default_config(), config)
@@ -56,15 +56,10 @@ defmodule OpenTelemetry.Honeycomb.Exporter do
     end
   end
 
-  @impl :ot_exporter
+  @impl :otel_exporter
   def shutdown(_), do: :ok
 
-  @impl :ot_exporter
-  @spec export(
-          tab :: :ets.tab(),
-          resource :: :ot_resource.t(),
-          Config.t()
-        ) :: :ok | :success | :failed_not_retryable | :failed_retryable
+  @impl :otel_exporter
   def export(tab, resource, config) do
     tab
     |> :ets.tab2list()
@@ -73,16 +68,17 @@ defmodule OpenTelemetry.Honeycomb.Exporter do
 
   @spec export_loaded(
           spans :: [:opentelemetry.span()],
-          resource :: :ot_resource.t(),
-          Config.t()
+          resource :: :otel_resource.t(),
+          config :: Config.t()
         ) :: :ok | :success | :failed_not_retryable | :failed_retryable
+  defp export_loaded(spans, resource, config)
 
   defp export_loaded([], _, _), do: :ok
 
   defp export_loaded(spans, resource, config) do
-    resource_attributes = :ot_resource.attributes(resource) |> Attributes.sort()
+    resource_attributes = :otel_resource.attributes(resource) |> Attributes.sort()
     attribute_map = config[:attribute_map]
-    cook = fn ot_span -> Event.from_ot_span(ot_span, resource_attributes, attribute_map) end
+    cook = fn otel_span -> Event.from_otel_span(otel_span, resource_attributes, attribute_map) end
 
     spans
     |> Enum.flat_map(cook)
@@ -118,23 +114,23 @@ defmodule OpenTelemetry.Honeycomb.Exporter do
   end
 
   defp handle_hc_reply({:ok, 401, _, _}, _),
-    do: failed_not_retryable("write_key incorrect for api_endpoint; got 401")
+    do: failed_notel_retryable("write_key incorrect for api_endpoint; got 401")
 
   defp handle_hc_reply({:ok, status, _, _}, _) when status >= 500,
     do: failed_retryable("upstream reports #{status}; failing batch")
 
   defp handle_hc_reply({:ok, status, _, _}, _),
-    do: failed_not_retryable("upstream reports #{status}; dropping batch")
+    do: failed_notel_retryable("upstream reports #{status}; dropping batch")
 
   defp handle_hc_reply(_, _), do: :failed_retryable
 
   defp find_hc_batch_item_errors(%{"status" => 202}), do: false
-  defp find_hc_batch_item_errors(%{"status" => 400}), do: :failed_not_retryable
+  defp find_hc_batch_item_errors(%{"status" => 400}), do: :failed_notel_retryable
   defp find_hc_batch_item_errors(_), do: :failed_retryable
 
-  defp failed_not_retryable(message) do
+  defp failed_notel_retryable(message) do
     warn(message)
-    :failed_not_retryable
+    :failed_notel_retryable
   end
 
   defp failed_retryable(message) do

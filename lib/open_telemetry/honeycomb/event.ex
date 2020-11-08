@@ -14,7 +14,6 @@ defmodule OpenTelemetry.Honeycomb.Event do
   alias OpenTelemetry.Honeycomb.Attributes
   alias OpenTelemetry.Honeycomb.Config.AttributeMap
   alias OpenTelemetry.Records.Span
-  require Record
 
   @enforce_keys [:time, :data]
   defstruct [:time, :data, samplerate: 1]
@@ -55,13 +54,13 @@ defmodule OpenTelemetry.Honeycomb.Event do
 
   [HCevents]: https://docs.honeycomb.io/api/events/
   """
-  @spec from_ot_span(
+  @spec from_otel_span(
           :opentelemetry.span(),
           resource_attributes :: OpenTelemetry.attributes(),
           attribute_map :: AttributeMap.t()
         ) :: [t()]
-  def from_ot_span(ot_span, resource_attributes, attribute_map) do
-    span = Span.from(ot_span)
+  def from_otel_span(otel_span, resource_attributes, attribute_map) do
+    span = Span.from(otel_span)
 
     data =
       span

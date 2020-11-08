@@ -16,9 +16,9 @@ Add `opentelemetry`, `opentelemetry_api`, and `opentelemetry_honeycomb` to your 
 `mix.exs`:
 
 ```elixir
-{:opentelemetry, "~> 0.4.0"},
-{:opentelemetry_api, "~> 0.3.1"},
-{:opentelemetry_honeycomb, "~> 0.3.0-rc.0"},
+{:opentelemetry, "~> 0.5.0"},
+{:opentelemetry_api, "~> 0.5.0"},
+{:opentelemetry_honeycomb, "~> 0.5.0-rc.1"},
 ```
 
 If you're using the default back ends, you'll also need `hackney` and `poison`:
@@ -38,7 +38,7 @@ A compact `config/config.exs` for `opentelemetry_honeycomb` is:
 use Config
 
 # You can also supply opentelemetry resources using environment variables, eg.:
-# OTEL_RESOURCE_LABELS=service.name=name,service.namespace=namespace
+# OTEL_RESOURCE_ATTRIBUTES=service.name=name,service.namespace=namespace
 
 config :opentelemetry, :resource,
   service: [
@@ -48,14 +48,14 @@ config :opentelemetry, :resource,
 
 config :opentelemetry,
   processors: [
-    ot_batch_processor: %{
-    exporter:
-      {OpenTelemetry.Honeycomb.Exporter, write_key: System.get_env("HONEYCOMB_WRITEKEY")}
+    otel_batch_processor: %{
+      exporter:
+        {OpenTelemetry.Honeycomb.Exporter, write_key: System.get_env("HONEYCOMB_WRITEKEY")}
     }
-]
+  ]
 ```
 
-`processors` specifies `ot_batch_processor`, which specifies `exporter`, a 2-tuple of the
+`processors` specifies `otel_batch_processor`, which specifies `exporter`, a 2-tuple of the
 exporter's module name and options to be supplied to its `init/1`. Our exporter takes a list of
 `t:OpenTelemetry.Honeycomb.Config.config_opt/0` as its options.
 
@@ -120,10 +120,10 @@ When flattening maps, we use periods (`.`) to delimit keys, for example this inp
 ## Verification
 
 First, we need to check `:opentelemetry` and `:opentelemetry_api`. Fire up `iex -S mix` and paste
-in the following code to install the `:ot_exporter_stdout` exporter:
+in the following code to install the `:otel_exporter_stdout` exporter:
 
 ```elixir
-:ot_batch_processor.set_exporter(:ot_exporter_stdout, [])
+:otel_batch_processor.set_exporter(:otel_exporter_stdout, [])
 ```
 
 After a delay, you should see:
@@ -138,29 +138,30 @@ Now, paste in some trace-sending code:
 
 ```elixir
 require OpenTelemetry.Tracer
-require OpenTelemetry.Span
 
-OpenTelemetry.Tracer.start_span("some-span")
-OpenTelemetry.Tracer.current_span_ctx()
-OpenTelemetry.Span.set_attributes(%{b: %{c: 2}})
-OpenTelemetry.Tracer.end_span()
+OpenTelemetry.Tracer.with_span "example" do
+  IO.inspect(OpenTelemetry.Tracer.current_span_ctx())
+  OpenTelemetry.Tracer.set_attribute(:a, 1)
+  OpenTelemetry.Tracer.set_attributes(b: 2, c: 3)
+  OpenTelemetry.Tracer.set_attributes(d: %{e: "f"})
+end
 ```
 
 You should get output resembling:
 
 ```erlang
-{span,243384816483509084844220162257481913277,10418680972954126737,undefined,
-      undefined,<<"some-span">>,'SPAN_KIND_UNSPECIFIED',-576460736343282000,
-      -576460736342566000,
-      #{b => #{c => 2}},
-      [],[],undefined,undefined,1,true,undefined}
+{span,142297071326187490948809128380223875835,10977461588491893807,undefined,
+      undefined,<<"example">>,'INTERNAL',-576460738804789000,
+      -576460738804601000,
+      [{a,1},{b,2},{c,3},{d,#{e => <<"f">>}}],
+      [],[],undefined,1,false,undefined}
 ```
 
 Next, we need to check `OpenTelemetry.Honeycomb.Exporter`. Paste in:
 
 ```elixir
 # hard way
-:ot_batch_processor.set_exporter(OpenTelemetry.Honeycomb.Exporter,
+:otel_batch_processor.set_exporter(OpenTelemetry.Honeycomb.Exporter,
   http_module: OpenTelemetry.Honeycomb.Http.ConsoleBackend,
   write_key: "HONEYCOMB_WRITEKEY"
 )
@@ -189,9 +190,12 @@ X-Honeycomb-Team: HONEYCOMB_WRITEKEY
       "trace.parent_id": null,
       "service.namespace": "service-namespace",
       "service.name": "service-name",
-      "name": "some-span",
+      "name": "example",
       "duration_ms": 6.06005859375,
-      "b.c": 2
+      "d.e": "f",
+      "c": 3,
+      "b": 2,
+      "a": 1
     }
   }
 ]

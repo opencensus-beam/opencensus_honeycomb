@@ -57,11 +57,11 @@ defmodule OpenTelemetry.Honeycomb.Http.ConsoleBackend do
   """
   def activate do
     opts = [http_module: __MODULE__, write_key: "HONEYCOMB_WRITEKEY"]
-    :ot_batch_processor.set_exporter(Exporter, opts)
+    :otel_batch_processor.set_exporter(Exporter, opts)
     {:ok, {Exporter, opts}}
   end
 
-  @config_path [:processors, :ot_batch_processor, :exporter]
+  @config_path [:processors, :otel_batch_processor, :exporter]
 
   @doc """
   Deactivate the console back end, re-installing your configured exporter.
@@ -74,7 +74,7 @@ defmodule OpenTelemetry.Honeycomb.Http.ConsoleBackend do
       nil ->
         IO.warn("no value at #{inspect(@config_path)}; installing default")
 
-        :ot_batch_processor.set_exporter(Exporter,
+        :otel_batch_processor.set_exporter(Exporter,
           http_module: WriteKeyMissingBackend,
           write_key: "HONEYCOMB_WRITEKEY"
         )
@@ -82,11 +82,11 @@ defmodule OpenTelemetry.Honeycomb.Http.ConsoleBackend do
         {:ok, WriteKeyMissingBackend}
 
       {module, options} ->
-        :ot_batch_processor.set_exporter(module, options)
+        :otel_batch_processor.set_exporter(module, options)
         {:ok, {module, options}}
 
       module ->
-        :ot_batch_processor.set_exporter(module)
+        :otel_batch_processor.set_exporter(module)
         {:ok, module}
     end
   end

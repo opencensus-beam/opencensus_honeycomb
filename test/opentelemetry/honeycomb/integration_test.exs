@@ -57,10 +57,10 @@ defmodule OpenTelemetry.Honeycomb.IntegrationTest do
     end)
 
     OpenTelemetry.Tracer.with_span "some-span" do
-      OpenTelemetry.Span.set_attribute("attr1", "value1")
-      OpenTelemetry.Span.set_attribute(:attr2, %{attr3: 4})
+      OpenTelemetry.Tracer.set_attribute("attr1", "value1")
+      OpenTelemetry.Tracer.set_attribute(:attr2, %{attr3: 4})
 
-      OpenTelemetry.Span.add_events([
+      OpenTelemetry.Tracer.add_events([
         OpenTelemetry.event("event.name", [{"event.attr1", "event.value1"}])
       ])
     end

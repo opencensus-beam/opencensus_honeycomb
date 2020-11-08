@@ -2,6 +2,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
   use Mix.Project
 
   @description "Integration between OpenTelemetry and Honeycomb"
+  @version "0.5.0-rc.0"
 
   def project do
     [
@@ -23,7 +24,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
       start_permanent: Mix.env() == :prod,
       source_url: "https://github.com/garthk/opentelemetry_honeycomb",
       test_coverage: [tool: ExCoveralls],
-      version: "0.3.0-rc.0"
+      version: @version
     ]
   end
 
@@ -42,9 +43,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
       links: %{
         "GitHub" => "https://github.com/garthk/opentelemetry_honeycomb",
         "OpenTelemetry" => "https://opentelemetry.io",
-        "OpenTelemetry Erlang API" =>
-          "https://github.com/open-telemetry/opentelemetry-erlang-api",
-        "OpenTelemetry Erlang SDK" => "https://github.com/open-telemetry/opentelemetry-erlang"
+        "OpenTelemetry Erlang" => "https://github.com/open-telemetry/opentelemetry-erlang"
       }
     ]
   end
@@ -61,8 +60,8 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
       # versions for runtime dependencies deliberately set as low as possible:
       {:hackney, ">= 1.11.0", optional: true},
       {:jason, ">= 1.0.0", optional: true},
-      {:opentelemetry, "~> 0.4.0"},
-      {:opentelemetry_api, "~> 0.3.1"},
+      {:opentelemetry, "~> 0.5.0"},
+      {:opentelemetry_api, "~> 0.5.0"},
       {:poison, ">= 1.5.0", optional: true},
       {:telemetry, "~> 0.4.0"}
     ]
