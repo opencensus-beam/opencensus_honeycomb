@@ -1,4 +1,6 @@
 defmodule OpenTelemetry.Honeycomb.Attributes do
+  @external_resource "README.md"
+
   @moduledoc """
   Attribute cleaning and flattening.
 

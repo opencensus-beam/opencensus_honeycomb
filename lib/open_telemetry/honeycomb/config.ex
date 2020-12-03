@@ -31,6 +31,8 @@ defmodule OpenTelemetry.Honeycomb.Config.AttributeMap do
 end
 
 defmodule OpenTelemetry.Honeycomb.Config do
+  @external_resource "README.md"
+
   @moduledoc """
   Configuration.
 
