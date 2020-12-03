@@ -73,8 +73,8 @@ defmodule OpenTelemetry.Honeycomb.Attributes do
   # If the value is an atom, convert it to a string without ':' or 'Elixir.' prefix
   defp clean_pair({k, v}) when is_atom(v) do
     case inspect(v) do
-      ":" <> repr -> {k, repr}
-      repr -> {k, repr}
+      ":" <> repr -> [{k, repr}]
+      repr -> [{k, repr}]
     end
   end
 

@@ -26,6 +26,10 @@ defmodule OpenTelemetry.Honeycomb.Attributes.CleaningTest do
   end
 
   describe "clean/1 inspects" do
+    test "atoms" do
+      assert %{atom: :atom} |> Attributes.clean() == [{"atom", "atom"}]
+    end
+
     test "tuples" do
       assert %{tuple: {:ok}} |> Attributes.clean() == [{"tuple", "{:ok}"}]
     end
