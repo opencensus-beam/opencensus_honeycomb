@@ -2,7 +2,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
   use Mix.Project
 
   @description "Integration between OpenTelemetry and Honeycomb"
-  @version "0.5.0-rc.0"
+  @version "0.5.0-rc.1"
 
   def project do
     [
