@@ -12,6 +12,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
       docs: docs(),
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
+      homepage_url: "https://github.com/garthk/opentelemetry_honeycomb",
       package: package(),
       preferred_cli_env: [
         coveralls: :test,
@@ -20,6 +21,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
         docs: :dev
       ],
       start_permanent: Mix.env() == :prod,
+      source_url: "https://github.com/garthk/opentelemetry_honeycomb",
       test_coverage: [tool: ExCoveralls],
       version: "0.3.0-rc.0"
     ]
@@ -78,9 +80,12 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
 
   defp docs() do
     [
-      main: "OpenTelemetry.Honeycomb",
+      api_reference: true,
+      authors: ["Garth Kidd"],
+      canonical: "http://hexdocs.pm/opentelemetry_honeycomb",
       extras: [],
-      nest_modules_by_prefix: [OpenTelemetry.Honeycomb]
+      main: "OpenTelemetry.Honeycomb",
+      source_ref: "v#{@version}"
     ]
   end
 end
