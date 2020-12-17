@@ -35,12 +35,21 @@ defmodule Opencensus.Honeycomb.Reporter do
     :ok
   end
 
-  defp survived_sampling?(%Event{samplerate: 1}), do: true
+  defp survived_sampling?(%Event{samplerate: 1} = event), do: true
 
-  defp survived_sampling?(%Event{samplerate: n}) when is_integer(n) and n > 0,
-    do: :rand.uniform(n) == 1
+  # magic 64-bit number
+  # 9_223_372_036_854_775_807
+  @max_id floor(:math.pow(2, 64)) - 1
 
-  defp survived_sampling?(_), do: false
+  defp survived_sampling?(%Event{samplerate: n, data: %{"trace.trace_id": trace_id}})
+       when is_integer(n) and n > 0 do
+    use Bitwise
+    {trace_id, ""} = Integer.parse(trace_id, 16)
+
+    (trace_id &&& @max_id) < floor(@max_id / n)
+  end
+
+  defp survived_sampling?(event), do: false
 
   @doc false
   @spec decorate(Event.t(), Config.decorator()) :: Event.t()
