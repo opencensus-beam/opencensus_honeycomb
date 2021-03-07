@@ -11,7 +11,7 @@ defmodule OpenTelemetry.Honeycomb.MixProject do
       description: @description,
       dialyzer: dialyzer(),
       docs: docs(),
-      elixir: "~> 1.5",
+      elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       homepage_url: "https://github.com/garthk/opentelemetry_honeycomb",
       package: package(),
