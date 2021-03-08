@@ -3,8 +3,8 @@ defmodule OpenTelemetry.Honeycomb.Config.AttributeMap do
   Attribute map configuration.
 
   Controls the dataset attributes used for various span properties _eg._ `"trace.trace_id"` for
-  the trace identifier, which you didn't set via `OpenTelemetry.Span.set_attribute/2`. Use the map
-  to match any existing [definitions][HCdefs] you've configured at the Honeycomb end.
+  the trace identifier, which you didn't set via `OpenTelemetry.Tracer.set_attributes/1`. Use the
+  map to match any existing [definitions][HCdefs] you've configured at the Honeycomb end.
 
   [HCdefs]: https://docs.honeycomb.io/working-with-your-data/managing-your-data/definitions/#tracing
   """

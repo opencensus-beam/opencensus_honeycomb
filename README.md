@@ -66,7 +66,7 @@ exporter's module name and options to be supplied to its `init/1`. Our exporter 
 <!-- ADOC !-->
 
 OpenTelemetry supports a flat map of attribute keys to string, number, and boolean values (see
-`t.OpenTelemetry.attribute_value/0`). The API does not _enforce_ this, implicitly supporting other
+`t:OpenTelemetry.attribute_value/0`). The API does not _enforce_ this, implicitly supporting other
 attribute value types _eg._ maps until export time.
 
 Honeycomb expects a flat JSON-serialisable object, but can be configured to flatten maps and
