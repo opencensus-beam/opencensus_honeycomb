@@ -2,25 +2,26 @@ name: Elixir CI
 
 on:
   push:
-    branches: [trunk]
+    branches: [main]
   pull_request:
-    branches: [trunk]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Elixir ${{matrix.elixir}} on OTP ${{matrix.otp}}
     strategy:
+      fail-fast: false
       matrix:
-        # https://github.com/garthk/opentelemetry_honeycomb/issues/3
-        otp: [21.3, 22.3]
-        elixir: [1.8, 1.9]
+        # Earliest and latest supported of each, only, to avoid abusing GitHub's machinery:
+        otp: ["21.3", "23.1"]
+        elixir: ["1.8", "1.11"]
     steps:
       - uses: actions/checkout@v1.0.0
       - uses: gleam-lang/setup-erlang@v1.0.0
         with:
           otp-version: ${{matrix.otp}}
-      - uses: actions/setup-elixir@v1.2.0
+      - uses: erlef/setup-elixir@v1.6.0
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
