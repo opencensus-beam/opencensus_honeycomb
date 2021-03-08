@@ -22,5 +22,12 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 opentelemetry_honeycomb-*.tar
 
-# VS Code ElixirLS temporary files:
+# Ignore environment files:
+.envrc
+.env
+
+# Ignore your asdf tool version overrides:
+.tool-versions
+
+# Ignore ElixirLS temporary files:
 .elixir_ls
