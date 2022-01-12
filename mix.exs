@@ -57,7 +57,7 @@ defmodule Opencensus.Honeycomb.MixProject do
       {:licensir, "~> 0.6.0", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0.2", only: :dev, runtime: false},
       {:opencensus, "~> 0.9.2"},
-      {:telemetry, "~> 0.4.0"}
+      {:telemetry, "~> 0.4.0 or ~> 1.0"}
     ]
   end
 
